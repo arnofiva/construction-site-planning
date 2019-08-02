@@ -24,6 +24,30 @@ import SymbolItem from "./SymbolItem";
 
 export const SymbolItemCollection = Collection.ofType<SymbolItem>(SymbolItem);
 
+const VEHICLE_NAMES = [
+  "Cell_Phone_Antenna",
+  "Powerline_Pole",
+  "Wind_Turbine",
+  "Dumpster",
+  "Fire_Hydrant",
+  "Jersey_Barrier",
+  "Traffic_Barrier_1",
+  "Traffic_Barrier_2",
+  "Traffic_Cone",
+  "Ambulance",
+  "Backhoe",
+  "Bobcat",
+  "Cargo_Box",
+  "Crane",
+  "Delivery_Truck",
+  "Dumptruck",
+  "Ford_Transit_Commercial_Van",
+  "Semi_Trailer_Truck",
+  "Tower_Crane",
+  "Trailer",
+  "Tractor",
+];
+
 @subclass("draw.symbolgallery.SymbolGroup")
 export default class SymbolGroup extends declared(Accessor) {
 
@@ -47,12 +71,20 @@ export default class SymbolGroup extends declared(Accessor) {
         item.fetchData().then((data) => {
           this.items.addMany(
             data.items
-            //  .filter((symbolItem: any) => symbolItem.thumbnail.href && symbolItem.dimensionality === "volumetric")
+              .filter((symbolItem: any) => this.includeSymbol(symbolItem))
               .map((symbolItem: any) => new SymbolItem(symbolItem, styleName)),
           );
         });
       }
     });
+  }
+
+  private includeSymbol(symbolItem: any) {
+    if (this.category === SymbolGroupId.Vehicles) {
+      return VEHICLE_NAMES.some((name) => symbolItem.name === name);
+    }
+
+    return true;
   }
 
   private getStyleName(item: PortalItem): string {
@@ -71,8 +103,8 @@ export default class SymbolGroup extends declared(Accessor) {
       case SymbolGroupId.Trees:
         return styleName === "EsriRealisticTreesStyle";
       case SymbolGroupId.Vehicles:
-        return styleName === "EsriRealisticTransportationStyle";
-          // || styleName === "EsriInfrastructureStyle";
+        return styleName === "EsriRealisticTransportationStyle" || styleName === "EsriInfrastructureStyle"
+          || styleName === "EsriRealisticStreetSceneStyle";
     }
     return false;
   }

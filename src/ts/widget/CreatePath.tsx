@@ -14,10 +14,11 @@
  * limitations under the License.
  *
  */
-
 import { declared, property, subclass } from "esri/core/accessorSupport/decorators";
 import Graphic from "esri/Graphic";
+import { LineSymbol3D } from "esri/symbols";
 import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
+import EsriSymbol from "esri/symbols/Symbol";
 import { renderable, tsx } from "esri/widgets/support/widget";
 
 import DrawWidget from "./DrawWidget";
@@ -26,6 +27,7 @@ interface PathMenu {
   label: string;
   color: string;
   width: number;
+  height: number;
 }
 
 @subclass("app.draw.CreatePath")
@@ -40,11 +42,19 @@ export default class CreatePath extends declared(DrawWidget) {
       label: "Street",
       color: "#cbcbcb",
       width: 20,
+      height: 0,
     },
     {
       label: "Walking Path",
       color: "#b2b2b2",
       width: 3,
+      height: 0,
+    },
+    {
+      label: "Wall",
+      color: "#b2b2b2",
+      width: 0.2,
+      height: 3,
     },
   ];
 
@@ -67,14 +77,31 @@ export default class CreatePath extends declared(DrawWidget) {
   }
 
   public updateGraphic(graphic: Graphic): IPromise<Graphic[]> {
-    return this.updatePolylineGraphic(graphic, graphic.symbol.color.toHex());
+    const color = graphic.symbol.color;
+    return this.updatePolylineGraphic(graphic, color ? color.toHex() : "#b2b2b2");
   }
 
   private startDrawing(menu: PathMenu) {
-    const symbol = new SimpleLineSymbol({
-      color: menu.color,
-      width: menu.width,
-    });
+    let symbol: EsriSymbol;
+    if (menu.height) {
+      symbol = new LineSymbol3D({
+        symbolLayers: [{
+          type: "path",
+          profile: "quad",
+          material: {
+            color: menu.color,
+          },
+          width: menu.width,
+          height: menu.height,
+          anchor: "bottom",
+        }],
+      });
+    } else {
+      symbol = new SimpleLineSymbol({
+        color: menu.color,
+        width: menu.width,
+      });
+    }
 
     this.createPolylineGraphic(symbol, menu.color).always(() => {
       this.activeMenu = null;

@@ -65,7 +65,7 @@ export default class SymbolItem extends declared(Accessor) {
               };
               actualSymbol.callout = {
                 type: "line",
-                color: [200, 200, 200],
+                color: [50, 50, 50],
                 size: 0.8,
               } as any;
 
