@@ -228,7 +228,7 @@ export default class App extends declared(WidgetBase) {
                 </div>
               </figure>
               <div class="card-content">
-                <h4 class="trailer-half">Participatory Planning</h4>
+                <h4 class="trailer-half">Construction Site Planning</h4>
                 <p class="font-size--1 trailer-half">
                   <ul>
                     <li>When creating shapes, either double click or press <code>C</code> to complete.</li>
