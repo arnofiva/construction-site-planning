@@ -22,8 +22,10 @@ import Point from "esri/geometry/Point";
 import Polygon from "esri/geometry/Polygon";
 import SpatialReference from "esri/geometry/SpatialReference";
 import Graphic from "esri/Graphic";
+import BuildingSceneLayer = require("esri/layers/BuildingSceneLayer");
 import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SceneLayer from "esri/layers/SceneLayer";
+import BuildingFilter = require("esri/layers/support/BuildingFilter");
 import SceneLayerView from "esri/views/layers/SceneLayerView";
 import FeatureFilter from "esri/views/layers/support/FeatureFilter";
 import SceneView from "esri/views/SceneView";
@@ -35,6 +37,8 @@ import WidgetBase from "./widget/WidgetBase";
 
 // One of low, medium, high
 export const QUALITY = "high";
+
+const BUILDING_FILTER = "Not FamilyType like 'Umgebung - Asphalt'";
 
 @subclass("app.widgets.webmapview")
 export default class PlanningScene extends declared(WidgetBase) {
@@ -103,6 +107,14 @@ export default class PlanningScene extends declared(WidgetBase) {
       this.map.add(this.sketchLayer);
       this.sketchLayer.add(this.boundingPolygonGraphic);
       this.sceneLayer = this.map.layers.find((layer) => layer.type === "scene") as SceneLayer;
+
+      this.map.layers.filter((layer) => layer.type === "building-scene")
+        .forEach((bsl: BuildingSceneLayer) => {
+          const filter = new BuildingFilter({filterBlocks: [{filterExpression: BUILDING_FILTER}]});
+          bsl.filters.add(filter);
+          bsl.activeFilterId = filter.id;
+        });
+
       this.sceneLayer.popupEnabled = false;
       this.view.whenLayerView(this.sceneLayer).then((lv: SceneLayerView) => {
         this.sceneLayerView = lv;
