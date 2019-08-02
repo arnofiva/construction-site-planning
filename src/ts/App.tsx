@@ -132,9 +132,9 @@ export default class App extends declared(WidgetBase) {
       onClick: this.showWidget.bind(this, this.createBuilding),
     });
     this.mainMenuEntries.push({
-      label: "Icons",
-      iconName: "fas fa-map-marker-alt",
-      onClick: this.showSymbolGallery.bind(this, SymbolGroupId.Icons),
+      label: "Tools",
+      iconName: "fas fa-wrench",
+      onClick: this.showSymbolGallery.bind(this, SymbolGroupId.Vehicles),
     });
     this.mainMenuEntries.push({
       label: "Trees",
@@ -142,9 +142,9 @@ export default class App extends declared(WidgetBase) {
       onClick: this.showSymbolGallery.bind(this, SymbolGroupId.Trees),
     });
     this.mainMenuEntries.push({
-      label: "Vehicles",
-      iconName: "fas fa-car",
-      onClick: this.showSymbolGallery.bind(this, SymbolGroupId.Vehicles),
+      label: "Icons",
+      iconName: "fas fa-map-marker-alt",
+      onClick: this.showSymbolGallery.bind(this, SymbolGroupId.Icons),
     });
     this.mainMenuEntries.push({
       label: "glTF",
