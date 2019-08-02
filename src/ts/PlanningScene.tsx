@@ -24,7 +24,6 @@ import SpatialReference from "esri/geometry/SpatialReference";
 import Graphic from "esri/Graphic";
 import GraphicsLayer from "esri/layers/GraphicsLayer";
 import SceneLayer from "esri/layers/SceneLayer";
-import { SimpleRenderer } from "esri/renderers";
 import SceneLayerView from "esri/views/layers/SceneLayerView";
 import FeatureFilter from "esri/views/layers/support/FeatureFilter";
 import SceneView from "esri/views/SceneView";
@@ -60,23 +59,6 @@ export default class PlanningScene extends declared(WidgetBase) {
   private sceneLayerView: SceneLayerView;
 
   private sceneLayerFilter: FeatureFilter;
-
-  private sceneLayerRenderer = new SimpleRenderer({
-    symbol: {
-      type: "mesh-3d",
-      symbolLayers: [{
-        type: "fill",
-        material: {
-          color: "white",
-        },
-        edges: {
-          type: "solid",
-          color: [150, 150, 150],
-          size: .5,
-        },
-      }],
-    },
-  } as any);
 
   private boundingPolygonGraphic: Graphic;
 
@@ -121,7 +103,6 @@ export default class PlanningScene extends declared(WidgetBase) {
       this.map.add(this.sketchLayer);
       this.sketchLayer.add(this.boundingPolygonGraphic);
       this.sceneLayer = this.map.layers.find((layer) => layer.type === "scene") as SceneLayer;
-      this.sceneLayer.renderer = this.sceneLayerRenderer;
       this.sceneLayer.popupEnabled = false;
       this.view.whenLayerView(this.sceneLayer).then((lv: SceneLayerView) => {
         this.sceneLayerView = lv;
